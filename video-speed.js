@@ -8,7 +8,7 @@ videojs.plugin('speed', function(options) {
     function changeSpeed(item) {
         var opt = item.options();
         item.selected(true);
-        player.M.playbackRate = opt.rate; // FIXME player.M
+        player.tag.playbackRate = opt.rate;
 
         var nodes = player.controlBar.speedButton.el().firstChild.children;
         for (var i = 0, l = nodes.length; i < l; i++) {
@@ -49,18 +49,16 @@ videojs.plugin('speed', function(options) {
     }
 
     player.ready(function() {
-        var button = new videojs.SpeedButton(player, {
-            el: videojs.Component.prototype.createEl(null, {
-                className: 'vjs-res-button vjs-menu-button vjs-control',
-                innerHTML: '<div class="vjs-control-content" style="font-size: 11px; line-height: 28px;"><span class="vjs-current-speed"></span></div>',
-                role: 'button'
-            })
-        });
-        player.controlBar.speedButton = player.controlBar.addChild(button);
-        changeSpeed(selectedItem);
-        
-        if (player.M.id.indexOf('html5') == -1) { // FIXME player.M
-            button.hide();
+        if (player.techName.toLowerCase().indexOf('html5') != -1) {
+            var button = new videojs.SpeedButton(player, {
+                el: videojs.Component.prototype.createEl(null, {
+                    className: 'vjs-res-button vjs-menu-button vjs-control',
+                    innerHTML: '<div class="vjs-control-content" style="font-size: 11px; line-height: 28px;"><span class="vjs-current-speed"></span></div>',
+                    role: 'button'
+                })
+            });
+            player.controlBar.speedButton = player.controlBar.addChild(button);
+            changeSpeed(selectedItem);
         }
     });
 });
